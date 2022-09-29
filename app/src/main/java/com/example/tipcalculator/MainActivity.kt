@@ -62,7 +62,10 @@ fun DefaultPreview() {
 fun TipTimeScreen() {
     var amountInput by remember { mutableStateOf("") }
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount)
+    var tipInput by remember { mutableStateOf("") }
+    val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
+    val tipAmount = calculateTip(amount, tipPercent)
+
 
     Column(
         modifier = Modifier.padding(32.dp),
@@ -76,9 +79,12 @@ fun TipTimeScreen() {
         Spacer(Modifier.height(16.dp))
         EditNumberField(value = amountInput,
                         onValueChange = { amountInput = it })
+        Spacer(Modifier.height(10.dp))
+        EditTipField(value = tipInput,
+            onValueChange = { tipInput = it })
         Spacer(Modifier.height(24.dp))
         Text(
-            text = stringResource(R.string.tip_amount, tip),
+            text = stringResource(R.string.tip_amount, tipAmount),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
@@ -98,3 +104,17 @@ fun EditNumberField(value: String,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 }
+
+@Composable
+fun EditTipField(value: String,
+                    onValueChange: (String) -> Unit) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(stringResource(R.string.tip_percentage)) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
+}
+
